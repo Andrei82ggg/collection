@@ -5,6 +5,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.Collection;
+
 @RestController
 @RequestMapping("/employee")
 
@@ -26,5 +29,9 @@ return servis.findEmployee(firstName, lastName);
     @GetMapping("/remove")
     public boolean remove(@RequestParam String firstName, @RequestParam String lastName){
     return servis.removeEmployee(firstName, lastName);
+    }
+    @GetMapping("/all")
+    public Collection<Employee> getALL(){
+        return servis.getAll();
     }
 }
