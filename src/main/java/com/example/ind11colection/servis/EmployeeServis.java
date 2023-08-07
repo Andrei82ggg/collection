@@ -7,6 +7,8 @@ import com.example.ind11colection.medal.Employee;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -46,6 +48,13 @@ public class EmployeeServis {
             }
         }
         throw new EmployeeNotFoundException();
+    }
+
+    public Collection<Employee> getAll() {
+        return Collections.unmodifiableList(employees.values());
+    }
+    private String makeKey(String firstName, String lastName){
+        return (firstName+ "_" + lastName).toLowerCase();
     }
 }
 
