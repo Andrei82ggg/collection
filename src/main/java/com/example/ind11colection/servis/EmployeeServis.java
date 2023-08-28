@@ -4,12 +4,15 @@ import com.example.ind11colection.exceptions.EmployeeAlreadyAddedException;
 import com.example.ind11colection.exceptions.EmployeeNotFoundException;
 import com.example.ind11colection.exceptions.EmployeeStorageIsFullException;
 import com.example.ind11colection.medal.Employee;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+
+import static org.apache.commons.lang3.StringUtils.*;
 
 @Service
 public class EmployeeServis {
@@ -22,11 +25,11 @@ public class EmployeeServis {
         if (employees.size() == SIZE) {
             throw new EmployeeStorageIsFullException();
         }
-        var employee = new Employee(firstName, lastName);
-        if (employees.contains(employee)) {
+        var key = makeKey(firstName, lastName);
+        if (employees.containsKey(key)) {
             throw new EmployeeAlreadyAddedException();
         }
-        employees.add(employee);
+        employees.put(key, new Employee(capitalize(firstName), capitalize(lastName)));
     }
 
     public Employee findEmployee(String firstName, String lastName) {
