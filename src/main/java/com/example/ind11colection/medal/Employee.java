@@ -75,4 +75,9 @@ public class Employee {
     }
 
 
+    public String getFirstname() {
+    }
+
+    public String getlastname() {
+    }
 }

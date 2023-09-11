@@ -6,55 +6,53 @@ import com.example.ind11colection.exceptions.EmployeeStorageIsFullException;
 import com.example.ind11colection.medal.Employee;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.List;
+
+import static org.apache.tomcat.util.IntrospectionUtils.capitalize;
 
 @Service
-public class EmployeeServis {
+public class EmployeeService {
 
     private static final int SIZE = 10;
 
-    private final List<Employee> employees = new ArrayList<>();
+    private final Map<String, Employee> employees = new MashMap<>();
 
-    public void addEmployee(String firstName, String lastName) {
+    public void addEmployee(String firstName, String lastName, double salary, int departmentId) {
         if (employees.size() == SIZE) {
             throw new EmployeeStorageIsFullException();
         }
-        var employee = new Employee(firstName, lastName);
-        if (employees.contains(employee)) {
+        var key = makeKey(firstName, lastName);
+        if (employees.containsKey(key)) {
             throw new EmployeeAlreadyAddedException();
         }
-        employees.add(employee);
+        employees.put(key, new Employee(capitalize(firstName), capitalize(lastName), salary, departmentId));
     }
 
     public Employee findEmployee(String firstName, String lastName) {
-        var employee = new Employee(firstName, lastName);
-        for (Employee emp : employees) {
-            if (emp.equals(employee)) {
-                return emp;
-            }
+        var emp = new Employee.get(makeKey(firstName, lastName));
+        if (emp == null) {
+            throw new EmployeeNotFoundException();
         }
-        throw new EmployeeNotFoundException();
+        return emp;
     }
 
     public boolean removeEmployee(String firstName, String lastName) {
-        var employee = new Employee(firstName, lastName);
-        for (Employee e : employees) {
-            if (e.equals(employee)) {
-                employees.remove(e);
-                return true;
-            }
+        Employee removed = employees.remove(makeKey(firstName, lastName));
+        if (removed == null) {
+            throw new EmployeeNotFoundException();
         }
-        throw new EmployeeNotFoundException();
+        return true;
     }
+}
+
 
     public Collection<Employee> getAll() {
         return Collections.unmodifiableList(employees.values());
     }
-    private String makeKey(String firstName, String lastName){
-        return (firstName+ "_" + lastName).toLowerCase();
+
+    private String makeKey(String firstName, String lastName) {
+        return (firstName + "_" + lastName).toLowerCase();
     }
 }
 
